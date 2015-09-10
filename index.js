@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var youtubedl = require('youtube-dl');
 var config = require('./config.json');
 
@@ -10,7 +11,7 @@ video.on('info', function(info) {
 
     console.log('Download started');
     console.log(JSON.stringify(info));
-    output = path,join(__dirname, 'out.mp4');
+    output = path.join(__dirname, 'out.mp4');
     video.pipe(fs.createWriteStream(output));
 });
 
