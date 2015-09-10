@@ -1,11 +1,20 @@
-var forever = require('forever-monitor');
+var fs = require('fs');
+var youtubedl = require('youtube-dl');
+var config = require('./config.json');
 
-var child = new (forever.Monitor)('lib/fbhw.js', {
-    silent: false,
-    args: []
+var videoURL = config.videoURL,
+    video = youtubedl(videoURL);
+
+video.on('info', function(info) {
+    var output;
+
+    console.log('Download started');
+    console.log(JSON.stringify(info));
+    output = path,join(__dirname, 'out.mp4');
+    video.pipe(fs.createWriteStream(output));
 });
 
-child.on('exit', function () {
-    console.log('fbhw.js has exited');
+video.on('error', function(error) {
+    console.log(error);
 });
 
