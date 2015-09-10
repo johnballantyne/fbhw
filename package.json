@@ -1,0 +1,31 @@
+{
+  "name": "fbhw",
+  "version": "0.0.1",
+  "description": "A tool to download The Free Beer and Hot Wings Morning Show video stream",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnballantyne/fbhw.git"
+  },
+  "keywords": [
+    "Free",
+    "Beer",
+    "Hot",
+    "Wings",
+    "freebeer",
+    "hotwings"
+  ],
+  "author": "John Ballantyne",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/johnballantyne/fbhw/issues"
+  },
+  "homepage": "https://github.com/johnballantyne/fbhw#readme",
+  "dependencies": {
+    "forever-monitor": "^1.6.0",
+    "youtube-dl": "^1.10.5"
+  }
+}
