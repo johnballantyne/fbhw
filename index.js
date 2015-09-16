@@ -11,7 +11,7 @@ function getStream() {
     var videoURL = config.videoURL,
         options = {
             rtmp: videoURL,
-            stop: 120,
+            stop: 960,
             quiet: null,
             live: null
         },
