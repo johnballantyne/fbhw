@@ -3,17 +3,43 @@ var rtmpdump = require('rtmpdump');
 var schedule = require('node-schedule');
 var config = require('./config.json');
 
+var videoURL = config.videoURL;
+
+function pingStream() {
+    var options = {
+        rtmp: videoURL,
+        stop: 1,
+        live: null,
+        timeout: 15
+    }
+
+    stream = rtmpdump.createStream(options);
+
+    console.log(new Date().toISOString());
+    console.log('Checking if stream is live...\n');
+
+    stream.on('connected', function (info) {
+        console.log(new Date().toISOString());
+        console.log('Stream connected. Capturing...\n');
+    });
+
+    stream.on('error', function (err) {
+        console.log(new Date().toISOString());
+        console.log('**** ' + err);
+        console.log('Unable to connect. Trying again...\n');
+        pingStream();
+    });
+}
 
 function getStream() {
     
-    var videoURL = config.videoURL,
-        options = {
-            rtmp: videoURL,
-            stop: 960,
-            live: null,
-            timeout: 5,
-        },
-        stream = rtmpdump.createStream(options);
+    var options = {
+        rtmp: videoURL,
+        stop: 960,
+        live: null,
+        timeout: 5
+    },
+    stream = rtmpdump.createStream(options);
 
     console.log(new Date().toISOString());
     console.log('Stream fetch initiated');
@@ -45,5 +71,6 @@ rule.second = 0;
 var j = schedule.scheduleJob(rule, getStream); 
 
 console.log(new Date().toString());
-console.log("Script has started.");
+console.log("Script has started.\n");
 
+pingStream();
