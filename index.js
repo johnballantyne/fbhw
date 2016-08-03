@@ -35,7 +35,7 @@ function getStream() {
     
     var options = {
         rtmp: videoURL,
-        stop: 3660,
+        stop: 960,
         live: null,
         timeout: 5
     },
@@ -65,7 +65,7 @@ function getStream() {
 var rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = new schedule.Range(1, 5);
 rule.hour = new schedule.Range(4, 10);
-rule.minute = [55];
+rule.minute = [5, 20, 35, 50];
 rule.second = 0;
 
 var j = schedule.scheduleJob(rule, getStream); 
