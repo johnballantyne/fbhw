@@ -32,7 +32,7 @@ function getStream() {
 
     var dateISO = new Date().toISOString();
     dateISO = dateISO.split('.')[0].replace(/-|:/g, '').replace(/T/, '-');
-    stream.pipe(fs.createWriteStream(dateISO));
+    stream.pipe(fs.createWriteStream(dateISO + '.mp4'));
 }
 
 // M-F, 4:00 - 5:59
