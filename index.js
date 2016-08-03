@@ -5,17 +5,18 @@ var config = require('./config.json');
 
 
 function getStream() {
-    console.log(new Date().toISOString());
-    console.log('Attempting download...');
     
     var videoURL = config.videoURL,
         options = {
             rtmp: videoURL,
             stop: 960,
-            quiet: null,
-            live: null
+            live: null,
+            timeout: 5,
         },
         stream = rtmpdump.createStream(options);
+
+    console.log(new Date().toISOString());
+    console.log('Stream fetch initiated');
 
     stream.on('connected', function (info) {
         console.log(info);
@@ -26,7 +27,7 @@ function getStream() {
     });
 
     stream.on('error', function (err) {
-        console.log(err);
+        console.log('**** ' + err);
     });
 
     var dateISO = new Date().toISOString();
