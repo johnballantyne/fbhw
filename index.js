@@ -16,18 +16,16 @@ function pingStream() {
 
     stream = rtmpdump.createStream(options);
 
-    vorpal.log(new Date().toISOString());
-    vorpal.log('Checking if stream is live...\n');
+    vorpal.log(new Date().toLocaleString() + ' > ' + 'Checking if stream is live...');
 
     stream.on('connected', function (info) {
-        vorpal.log(new Date().toISOString());
-        vorpal.log('Stream connected. Capturing...\n');
+        vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
     });
 
     stream.on('error', function (err) {
-        vorpal.log(new Date().toISOString());
-        vorpal.log('**** ' + err);
+        vorpal.log(new Date().toLocaleString() + ' > ' + ' **** ' + err);
         vorpal.log('Unable to connect. Trying again...\n');
+        vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error. Trying again...');
         pingStream();
     });
 }
@@ -59,7 +57,8 @@ function getStream() {
 
     stream.on('error', function (err) {
         //TODO: Check against broadcast schedule, resume if necessary
-        vorpal.log('**** ' + err);
+        vorpal.log(new Date().toLocaleString() + ' > ' + ' **** ' + err);
+        vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
     });
 
     //TODO: Shift to Eastern time zone
@@ -79,8 +78,7 @@ vorpal
   .delimiter('fbhw$')
   .show();
 
-vorpal.log(new Date().toString());
-vorpal.log("Script has started.\n");
+vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
 
 var j = schedule.scheduleJob(rule, getStream); 
 
