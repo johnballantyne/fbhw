@@ -54,7 +54,6 @@ function getStream() {
         //TODO: Progress bar
         //TODO: Parse kBytes into mBytes, gBytes
         vorpal.ui.redraw(new Date().toLocaleString() + ' > ' + 'Stream downloading\n'
-        vorpal.ui.redraw(new Date().toLocaleString() + ' > ' + 'Stream downloading\n'
                          + kBytes + ' kBytes read, ' + elapsed + ' secs elapsed');
     });
 
