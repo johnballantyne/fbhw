@@ -28,6 +28,7 @@
     "forever-monitor": "^1.6.0",
     "node-schedule": "^0.2.9",
     "rtmpdump": "^0.1.1",
+    "vorpal": "^1.11.4",
     "youtube-dl": "^1.10.5"
   }
 }
