@@ -57,8 +57,8 @@ function getStream() {
 
     stream.on('error', function (err) {
         //TODO: Check against broadcast schedule, resume if necessary
-        vorpal.log(new Date().toLocaleString() + ' > ' + ' **** ' + err);
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
+        vorpal.log(new Date().toLocaleString() + ' > ' + '**** ' + err);
     });
 
     //TODO: Shift to Eastern time zone
