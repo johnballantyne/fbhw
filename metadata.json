@@ -1,0 +1,18 @@
+{
+    metadata: {
+        duration: 0,
+        width: 1280,
+        height: 720,
+        videodatarate: 1464.84,
+        framerate: 30,
+        videocodecid: 7,
+        audiodatarate: 93.75,
+        audiosamplerate: 48000,
+        audiosamplesize: 16,
+        stereo: 'TRUE',
+        audiocodecid: 10,
+        encoder: 'Lavf57.2.100',
+        filesize: 0
+    }
+}
+
