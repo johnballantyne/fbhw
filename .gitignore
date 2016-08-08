@@ -1,3 +1,6 @@
+# OS stuff
+*.swp
+
 # Logs
 logs
 *.log
