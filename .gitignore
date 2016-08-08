@@ -16,3 +16,7 @@ node_modules
 
 # Don't make the video URL public
 *config.json
+
+# Download directory
+dl/
+
