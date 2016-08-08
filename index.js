@@ -16,13 +16,13 @@ function streamError(err, callback) {
     }
 }
 
-function pingStream(record) {
+function pingStream(record = false, timeout = 15, persist = false) {
     //TODO: progress bar to show timeout status
     var options = {
         rtmp: videoURL,
         stop: 1,
         live: null,
-        timeout: 15
+        timeout: timeout 
     }
 
     stream = rtmpdump.createStream(options);
@@ -38,10 +38,17 @@ function pingStream(record) {
     });
 
     stream.on('error', function (err) {
-        streamError(err);
+        streamError(err, function () {
+            if (persist) {
+                pingStream();
+            }
+        });
         vorpal.show();
     });
 
+    if (typeof callback === "function") {
+        callback();
+    }
 }
 
 function getStream() {
@@ -93,7 +100,7 @@ rule2.second = 30;
 vorpal
     .command('ping', 'Checks for stream connectivity. Times out after 15 seconds')
     .action(function (args, callback) {
-        pingStream(false);
+        pingStream();
         callback();
     });
     
@@ -106,6 +113,6 @@ vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
 var j = schedule.scheduleJob(rule, getStream); 
 var k = schedule.scheduleJob(rule2, function () {
     vorpal.log(new Date().toLocaleString() + ' > ' + 'Pinging stream for first hour...');
-    pingStream(true);
+    pingStream(true, 15, true);
 }); 
 
