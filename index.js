@@ -8,7 +8,6 @@ var videoURL = config.videoURL;
 //TODO: Utility function for log formatting
 
 function streamError(err, callback) {
-    //TODO: Check against broadcast schedule, resume if necessary
     vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
     vorpal.log(new Date().toLocaleString() + ' > ' + '**** ' + err);
     if (typeof callback === "function") {
@@ -18,6 +17,7 @@ function streamError(err, callback) {
 
 function pingStream(record = false, timeout = 15, persist = false) {
     //TODO: progress bar to show timeout status
+    var frames = ['|', '/', '-', '\\'];
     var options = {
         rtmp: videoURL,
         stop: 1,
@@ -28,9 +28,15 @@ function pingStream(record = false, timeout = 15, persist = false) {
     stream = rtmpdump.createStream(options);
 
     vorpal.hide();
-    vorpal.log(new Date().toLocaleString() + ' > ' + 'Checking if stream is live...');
+    var timestamp = new Date().toLocaleString();
+    var throbber = setInterval(function () {
+        var pos = Math.floor(new Date().getMilliseconds() / 250);
+        vorpal.ui.redraw(timestamp + ' > ' + 'Checking if stream is live... ' + frames[pos], 'text');
+    }, 250);
 
     stream.on('connected', function (info) {
+        vorpal.ui.redraw(timestamp + ' > ' + 'Checking if stream is live...');
+        clearInterval(throbber);
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
         if (record) {
             getStream();
@@ -38,6 +44,8 @@ function pingStream(record = false, timeout = 15, persist = false) {
     });
 
     stream.on('error', function (err) {
+        vorpal.ui.redraw(timestamp + ' > ' + 'Checking if stream is live...');
+        clearInterval(throbber);
         streamError(err, function () {
             if (persist) {
                 pingStream(record, timeout, persist);
@@ -51,11 +59,11 @@ function pingStream(record = false, timeout = 15, persist = false) {
     }
 }
 
-function getStream() {
+function getStream(duration = 3630) {
     
     var options = {
         rtmp: videoURL,
-        stop: 3630,
+        stop: duration,
         live: null,
         timeout: 5
     },
@@ -66,7 +74,6 @@ function getStream() {
     stream.on('connected', function (info) {
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream connected');
         //vorpal.log(info);
-        vorpal.ui.cancel();
     });
 
     stream.on('progress', function (kBytes, elapsed) {
@@ -76,7 +83,11 @@ function getStream() {
                          + kBytes + ' kBytes read, ' + elapsed + ' secs elapsed');
     });
 
-    stream.on('error', streamError);
+    stream.on('error', function (err) {
+        streamError(err, function (){
+            //TODO: Check against broadcast schedule, resume if necessary
+        });
+    });
 
     //TODO: Shift to Eastern time zone
     var dateISO = new Date().toISOString();
