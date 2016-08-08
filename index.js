@@ -40,7 +40,7 @@ function pingStream(record = false, timeout = 15, persist = false) {
     stream.on('error', function (err) {
         streamError(err, function () {
             if (persist) {
-                pingStream();
+                pingStream(record, timeout, persist);
             }
         });
         vorpal.show();
@@ -98,9 +98,13 @@ rule2.minute = [30];
 rule2.second = 30;
 
 vorpal
-    .command('ping', 'Checks for stream connectivity. Times out after 15 seconds')
+    .command('ping', 'Checks for stream connectivity.')
+    .option('-r, --record', 'Will record the stream on success. Default is false.')
+    .option('-t, --timeout <seconds>', 'Time in seconds before failure. Default is 15.')
+    .option('-p, --persist', 'Will repeat until success. Default is false.')
     .action(function (args, callback) {
-        pingStream();
+        vorpal.log(args);
+        pingStream(args.options.record, args.options.timeout, args.options.persist);
         callback();
     });
     
