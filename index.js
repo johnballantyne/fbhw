@@ -44,7 +44,7 @@ function getStream() {
 
     stream.on('connected', function (info) {
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream connected');
-        vorpal.log(info);
+        //vorpal.log(info);
         vorpal.ui.cancel();
     });
 
