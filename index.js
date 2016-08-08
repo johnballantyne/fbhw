@@ -6,7 +6,14 @@ var vorpal = require('vorpal')();
 
 var videoURL = config.videoURL;
 
+function streamError(err) {
+    //TODO: Check against broadcast schedule, resume if necessary
+    vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
+    vorpal.log(new Date().toLocaleString() + ' > ' + '**** ' + err);
+}
+
 function pingStream() {
+    //TODO: progress bar to show timeout status
     var options = {
         rtmp: videoURL,
         stop: 1,
@@ -22,6 +29,7 @@ function pingStream() {
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
     });
 
+    stream.on('error', streamError);
     stream.on('error', function (err) {
         vorpal.log(new Date().toLocaleString() + ' > ' + ' **** ' + err);
         vorpal.log('Unable to connect. Trying again...\n');
@@ -55,11 +63,7 @@ function getStream() {
                          + kBytes + ' kBytes read, ' + elapsed + ' secs elapsed');
     });
 
-    stream.on('error', function (err) {
-        //TODO: Check against broadcast schedule, resume if necessary
-        vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
-        vorpal.log(new Date().toLocaleString() + ' > ' + '**** ' + err);
-    });
+    stream.on('error', streamError);
 
     //TODO: Shift to Eastern time zone
     var dateISO = new Date().toISOString();
@@ -74,6 +78,13 @@ rule.hour = new schedule.Range(4, 10);
 rule.minute = [59];
 rule.second = 30;
 
+vorpal
+    .command('ping', 'Checks for stream connectivity')
+    .action(function (args, callback) {
+        pingStream();
+        callback();
+    });
+    
 vorpal
   .delimiter('fbhw$')
   .show();
