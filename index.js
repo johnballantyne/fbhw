@@ -103,7 +103,6 @@ vorpal
     .option('-t, --timeout <seconds>', 'Time in seconds before failure. Default is 15.')
     .option('-p, --persist', 'Will repeat until success. Default is false.')
     .action(function (args, callback) {
-        vorpal.log(args);
         pingStream(args.options.record, args.options.timeout, args.options.persist);
         callback();
     });
