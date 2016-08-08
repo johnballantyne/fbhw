@@ -7,13 +7,16 @@ var vorpal = require('vorpal')();
 var videoURL = config.videoURL;
 //TODO: Utility function for log formatting
 
-function streamError(err) {
+function streamError(err, callback) {
     //TODO: Check against broadcast schedule, resume if necessary
     vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
     vorpal.log(new Date().toLocaleString() + ' > ' + '**** ' + err);
+    if (typeof callback === "function") {
+        callback();
+    }
 }
 
-function pingStream() {
+function pingStream(record) {
     //TODO: progress bar to show timeout status
     var options = {
         rtmp: videoURL,
@@ -29,9 +32,16 @@ function pingStream() {
 
     stream.on('connected', function (info) {
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
+        if (record) {
+            getStream();
+        }
     });
 
-    stream.on('error', streamError);
+    stream.on('error', function (err) {
+        streamError(err);
+        vorpal.show();
+    });
+
 }
 
 function getStream() {
@@ -75,9 +85,9 @@ rule.minute = [59];
 rule.second = 30;
 
 vorpal
-    .command('ping', 'Checks for stream connectivity')
+    .command('ping', 'Checks for stream connectivity. Times out after 15 seconds')
     .action(function (args, callback) {
-        pingStream();
+        pingStream(false);
         callback();
     });
     
