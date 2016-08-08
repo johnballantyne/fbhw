@@ -77,7 +77,6 @@ rule.second = 30;
 vorpal
     .command('ping', 'Checks for stream connectivity')
     .action(function (args, callback) {
-        vorpal.ui.cancel();
         pingStream();
         callback();
     });
