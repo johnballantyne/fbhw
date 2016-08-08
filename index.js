@@ -5,6 +5,7 @@ var config = require('./config.json');
 var vorpal = require('vorpal')();
 
 var videoURL = config.videoURL;
+//TODO: Utility function for log formatting
 
 function streamError(err) {
     //TODO: Check against broadcast schedule, resume if necessary
@@ -23,6 +24,7 @@ function pingStream() {
 
     stream = rtmpdump.createStream(options);
 
+    vorpal.hide();
     vorpal.log(new Date().toLocaleString() + ' > ' + 'Checking if stream is live...');
 
     stream.on('connected', function (info) {
@@ -30,12 +32,6 @@ function pingStream() {
     });
 
     stream.on('error', streamError);
-    stream.on('error', function (err) {
-        vorpal.log(new Date().toLocaleString() + ' > ' + ' **** ' + err);
-        vorpal.log('Unable to connect. Trying again...\n');
-        vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error. Trying again...');
-        pingStream();
-    });
 }
 
 function getStream() {
@@ -81,6 +77,7 @@ rule.second = 30;
 vorpal
     .command('ping', 'Checks for stream connectivity')
     .action(function (args, callback) {
+        vorpal.ui.cancel();
         pingStream();
         callback();
     });
