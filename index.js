@@ -84,6 +84,12 @@ rule.hour = new schedule.Range(4, 10);
 rule.minute = [59];
 rule.second = 30;
 
+var rule2 = new schedule.RecurrenceRule();
+rule2.dayOfWeek = new schedule.Range(1, 5);
+rule2.hour = [4];
+rule2.minute = [30];
+rule2.second = 30;
+
 vorpal
     .command('ping', 'Checks for stream connectivity. Times out after 15 seconds')
     .action(function (args, callback) {
@@ -98,4 +104,8 @@ vorpal
 vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
 
 var j = schedule.scheduleJob(rule, getStream); 
+var k = schedule.scheduleJob(rule2, function () {
+    vorpal.log(new Date().toLocaleString() + ' > ' + 'Pinging stream for first hour...');
+    pingStream(true);
+}); 
 
