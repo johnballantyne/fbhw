@@ -39,7 +39,7 @@ function pingStream(record = false, timeout = 15, persist = false) {
         clearInterval(throbber);
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
         if (record) {
-            getStream();
+            recordStream();
         }
     });
 
@@ -59,7 +59,7 @@ function pingStream(record = false, timeout = 15, persist = false) {
     }
 }
 
-function getStream(duration = 3630) {
+function recordStream(duration = 3630) {
     
     var options = {
         rtmp: videoURL,
@@ -117,6 +117,13 @@ vorpal
         pingStream(args.options.record, args.options.timeout, args.options.persist);
         callback();
     });
+
+vorpal
+    .command('record', 'Gets the stream.')
+    .option('-d, --duration <seconds>', 'Time in seconds to record')
+    .action(function (args, callback) {
+        recordStream(args.options.duration);
+    });
     
 vorpal
   .delimiter('fbhw$')
@@ -124,7 +131,7 @@ vorpal
 
 vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
 
-var j = schedule.scheduleJob(rule, getStream); 
+var j = schedule.scheduleJob(rule, recordStream); 
 var k = schedule.scheduleJob(rule2, function () {
     vorpal.log(new Date().toLocaleString() + ' > ' + 'Pinging stream for first hour...');
     pingStream(true, 15, true);
