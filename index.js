@@ -98,7 +98,7 @@ function recordStream(duration = 3630) {
 // M-F, 4:00 - 5:59
 var rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = new schedule.Range(1, 5);
-rule.hour = new schedule.Range(4, 10);
+rule.hour = new scherule.Range(5, 10);
 rule.minute = [59];
 rule.second = 30;
 
