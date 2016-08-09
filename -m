@@ -39,7 +39,6 @@ function pingStream(record = false, timeout = 15, persist = false) {
         clearInterval(throbber);
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
         if (record) {
-            //TODO: dynamic duration
             recordStream();
         }
     });
