@@ -39,8 +39,8 @@ function pingStream(record = false, timeout = 15, persist = false) {
         clearInterval(throbber);
         vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
         if (record) {
-            //TODO: dynamic duration
-            recordStream();
+            var duration = timeToTop() + 3630;
+            recordStream(duration);
         }
     });
 
@@ -96,6 +96,10 @@ function recordStream(duration = 3630) {
     stream.pipe(fs.createWriteStream('dl/' + timestamp + '.mp4'));
 }
 
+function recordFirstHour() {
+    pingStream(true, 5400, true);
+}
+
 function timeToTop(date = new Date()) {
     // Returns the amount of seconds before the top of the hour
     var mins = date.getMinutes(),
@@ -133,6 +137,11 @@ rule.hour = new schedule.Range(5, 10);
 rule.minute = [59];
 rule.second = 30;
 
+//var rule2 = new schedule.RecurrenceRule();
+//rule2.dayOfWeek = new schedule.Range(1, 5);
+//rule2.hour = [4];
+//rule2.minute = [30];
+//rule2.second = 30;
 var rule2 = new schedule.RecurrenceRule();
 rule2.dayOfWeek = new schedule.Range(1, 5);
 rule2.hour = [4];
@@ -164,7 +173,7 @@ vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
 
 var j = schedule.scheduleJob(rule, recordStream); 
 var k = schedule.scheduleJob(rule2, function () {
-    vorpal.log(new Date().toLocaleString() + ' > ' + 'Pinging stream for first hour...');
-    pingStream(true, 15, true);
+    vorpal.log(new Date().toLocaleString() + ' > ' + 'Fetching first hour...');
+
 }); 
 
