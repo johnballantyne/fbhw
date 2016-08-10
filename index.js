@@ -98,7 +98,9 @@ function recordStream(duration = 3630) {
 
 function timeToTop(date = new Date()) {
     // Returns the amount of seconds before the top of the hour
-    return strippedLocaleTime();
+    var mins = date.getMinutes(),
+        secs = date.getSeconds();
+    return (60 - mins) * 60 + (60 - secs); 
 }
 
 function strippedLocaleDate(date = new Date()) {
