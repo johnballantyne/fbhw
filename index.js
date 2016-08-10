@@ -91,16 +91,43 @@ function recordStream(duration = 3630) {
         });
     });
 
-    //TODO: Shift to Eastern time zone
-    var dateISO = new Date().toISOString();
-    dateISO = dateISO.split('.')[0].replace(/-|:/g, '').replace(/T/, '-');
-    stream.pipe(fs.createWriteStream('dl/' + dateISO + '.mp4'));
+    var timestamp = strippedLocaleDate() + '-' + strippedLocaleTime();
+    vorpal.log(timestamp);
+    stream.pipe(fs.createWriteStream('dl/' + timestamp + '.mp4'));
+}
+
+function timeToTop(date = new Date()) {
+    // Returns the amount of seconds before the top of the hour
+    return strippedLocaleTime();
+}
+
+function strippedLocaleDate(date = new Date()) {
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    if (day < 10) {
+        day = '0' + day;
+    }
+    if (month < 10) {
+        month = '0' + month;
+    }
+    
+    return date.getFullYear() + month + day;
+}
+
+function strippedLocaleTime(date = new Date()) {
+    // Strips all non-digits from the time and adds padding
+    // '9:38:46 AM' becomes '093846'
+    var pad = '';
+    if (date.getHours() < 10) {
+        pad = '0';
+    }
+    return pad + date.toLocaleTimeString().replace(/\D*/g, '');
 }
 
 // M-F, 4:00 - 5:59
 var rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = new schedule.Range(1, 5);
-rule.hour = new scherule.Range(5, 10);
+rule.hour = new schedule.Range(5, 10);
 rule.minute = [59];
 rule.second = 30;
 
@@ -126,7 +153,7 @@ vorpal
     .action(function (args, callback) {
         recordStream(args.options.duration);
     });
-    
+
 vorpal
   .delimiter('fbhw$')
   .show();
