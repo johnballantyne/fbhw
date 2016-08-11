@@ -174,6 +174,6 @@ vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
 var j = schedule.scheduleJob(rule, recordStream); 
 var k = schedule.scheduleJob(rule2, function () {
     vorpal.log(new Date().toLocaleString() + ' > ' + 'Fetching first hour...');
-
+    recordFirstHour();
 }); 
 
