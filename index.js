@@ -79,6 +79,7 @@ function recordStream(duration = 3630) {
 
     stream.on('progress', function (kBytes, elapsed) {
         //TODO / BUG: This can apparently hang indefinitely without throwing an error
+        //    Bug possibly tied to logging on?
         //TODO: Progress bar
         //TODO: Parse kBytes into mBytes, gBytes
         vorpal.ui.redraw(new Date().toLocaleString() + ' > ' + 'Stream downloading\n'
@@ -92,7 +93,6 @@ function recordStream(duration = 3630) {
     });
 
     var timestamp = strippedLocaleDate() + '-' + strippedLocaleTime();
-    vorpal.log(timestamp);
     stream.pipe(fs.createWriteStream('dl/' + timestamp + '.mp4'));
 }
 
