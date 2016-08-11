@@ -5,11 +5,10 @@ var config = require('./config.json');
 var vorpal = require('vorpal')();
 
 var videoURL = config.videoURL;
-//TODO: Utility function for log formatting
 
 function streamError(err, callback) {
-    vorpal.log(new Date().toLocaleString() + ' > ' + 'Connection error.');
-    vorpal.log(new Date().toLocaleString() + ' > ' + '**** ' + err);
+    vorpal.logTask('Connection error.');
+    vorpal.logTask('**** ' + err);
     if (typeof callback === "function") {
         callback();
     }
@@ -37,7 +36,7 @@ function pingStream(record = false, timeout = 15, persist = false) {
     stream.on('connected', function (info) {
         vorpal.ui.redraw(timestamp + ' > ' + 'Checking if stream is live...');
         clearInterval(throbber);
-        vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream is live.');
+        vorpal.logTask('Stream is live.');
         if (record) {
             var duration = timeToTop() + 3630;
             recordStream(duration);
@@ -70,11 +69,11 @@ function recordStream(duration = 3630) {
     },
     stream = rtmpdump.createStream(options);
 
-    vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream fetch initiated');
+    vorpal.logTask('Stream fetch initiated');
 
     stream.on('connected', function (info) {
-        vorpal.log(new Date().toLocaleString() + ' > ' + 'Stream connected');
-        //vorpal.log(info);
+        vorpal.logTask('Stream connected');
+        //vorpal.logTask(info);
     });
 
     stream.on('progress', function (kBytes, elapsed) {
@@ -130,6 +129,10 @@ function strippedLocaleTime(date = new Date()) {
     return pad + date.toLocaleTimeString().replace(/\D*/g, '');
 }
 
+vorpal.logTask = function (data) {
+    vorpal.log(new Date().toLocaleString() + ' > ' + data);
+}
+
 // M-F, 4:00 - 5:59
 var rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = new schedule.Range(1, 5);
@@ -169,11 +172,11 @@ vorpal
   .delimiter('fbhw$')
   .show();
 
-vorpal.log(new Date().toLocaleString() + ' > ' + 'Script launched');
+vorpal.logTask('Script launched');
 
 var j = schedule.scheduleJob(rule, recordStream); 
 var k = schedule.scheduleJob(rule2, function () {
-    vorpal.log(new Date().toLocaleString() + ' > ' + 'Fetching first hour...');
+    vorpal.logTask('Fetching first hour...');
     recordFirstHour();
 }); 
 
